@@ -1,0 +1,19 @@
+.timeline-container .post .description {
+	color: #393939;
+	font-size: 15px;
+	margin: 10px 0;
+	line-height: 1.5;
+}
+.timeline-container .post .caption {
+	color: #9d9d9d;
+	font-size: 12px;
+	margin-top: 4px;
+}
+.timeline-container .post h3 {
+	margin: 0 0 10px;
+	font-size: 20px;
+	font-weight: normal;
+	color: #010101;
+	padding-right: 30px;
+	line-height: 1.3em;
+}

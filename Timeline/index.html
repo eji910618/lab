@@ -1,0 +1,105 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:fb="http://www.facebook.com/2008/fbml"
+      xmlns:og="http://opengraphprotocol.org/schema/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>jQuery Vertical Example</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="css/vendor/normalize.css">
+  <link rel="stylesheet" href="css/timeline.css">
+</head>
+
+<body>
+<div class="example">
+  <h1>Kitten JSON Example</h1>
+  <strong>JSON</strong>
+  <pre><code>// Uses example/example.json data soure
+    {
+    data: data,
+    width: '75%'
+    }</code></pre>
+  <div class="vertical-timeline-buttons clearfix">
+    <div class="expand-collapse-buttons">
+      <a class="expand-all <% if (data.defaultExpansion == "expanded") { %>active<% } %>" href="#"><span>Expand all</span></a>
+          <a class="collapse-all <% if (data.defaultExpansion == "collapsed") { %>active<% } %>" href="#"><span>Collapse all</span></a>
+        </div> 
+        <div class="sort-buttons"> 
+          <a class="sort-newest <% if (data.defaultDirection == "newest") { %>active<% } %>" href="#"><span>Newest first</span></a>
+          <a class="sort-oldest <% if (data.defaultDirection == "oldest") { %>active<% } %>" href="#"><span>Oldest first</span></a>
+        </div> 
+      </div> 
+  <div class="example-kitten cf">
+    <ul class="capability">
+      <li class="new"></li>
+      <li class="old"></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Include scripts -->
+<script type="text/javascript" src="js/vendor/jquery-1.10.4.min.js"></script>
+<script type="text/javascript" src="js/plugins.js"></script>
+<script type="text/javascript" src="js/Timeline.js"></script>
+
+<script id="simple-template" type="text/x-handlebars-template">
+  <div class="">
+    <div class="inner">
+      <div class="timestamp">{{timestamp}}</div>
+      <div class="title"><h3>{{title}}</h3></div>
+      <div class="date">{{display_date}}</div>
+      <div class="body">
+        {{#if photourl}}
+        <img src="{{photourl}}" alt="" style="width: 500px;">
+        {{/if}}
+        {{#if caption}}
+        <div class="caption">({{caption}})</div>
+        {{/if}}
+        {{#if body}}
+        <div class="text">{{body}}</div>
+        {{/if}}
+        <div class="clearfix">
+          {{#if readmoreurl}}
+          <a target="_blank" class="more" href="{{readmoreurl}}">READ MORE</a>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/javascript">
+  //wait for page to load
+  $(document).ready(function(){
+    // Extract the text from the template .html() is the jquery helper method for that
+    var raw_template = $('#simple-template').html();
+    // Compile that into an handlebars template
+    var template = Handlebars.compile(raw_template);
+    // Retrieve the placeHolder where the Posts will be displayed
+    var placeHolder = $(".example-kitten");
+    // Fetch all Blog Posts data from server in JSON
+    $.get('json/example.json',function(data,status,xhr){
+      $.each(data,function(index,element){
+        // Generate the HTML for each post
+        var html = template(element);
+        // Render the posts into the page
+        placeHolder.append(html);
+      });
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $.getJSON('json/example.json', function (data) {
+      $('.example-kitten').verticalTimeline({
+        data: data,
+        width: '75%',
+        handleResize: true
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

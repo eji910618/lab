@@ -1,0 +1,29 @@
+[
+  {
+    "title": "This timeline uses JSON data directly",
+    "date": "27 Mar 2008",
+    "displaydate": "Mar 27",
+    "photourl": "http://eomjeein.com/img/portfolio/bg-fixed-img-001.jpg",
+    "caption": "Mike Baird",
+    "body": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu",
+    "readmoreurl": "http://www.google.com/"
+  },
+  {
+    "title": "Peregrine Falcon Adult, Morro Bay, CA",
+    "date": "27 May 2008",
+    "displaydate": "May 27",
+    "photourl": "http://eomjeein.com/img/portfolio/bg-fixed-img-002.jpg",
+    "caption": "Mike Baird",
+    "body": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu",
+    "readmoreurl": "http://www.google.com/"
+  },
+  {
+    "title": "Peregrine Falcon Adult, Morro Bay, CA",
+    "date": "27 Oct 2008",
+    "displaydate": "Oct 27",
+    "photourl": "http://eomjeein.com/img/portfolio/bg-fixed-img-003.jpg",
+    "caption": "Mike Baird",
+    "body": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu",
+    "readmoreurl": "http://www.google.com/"
+  }
+]
