@@ -1,0 +1,26 @@
+# Project Specific
+ 
+# Compiled Style Sheet & Minified Javascript.
+#*.min.css
+#*.min.js
+ 
+# Project General
+/data
+/upload
+log
+ 
+# Codeigniter Specific
+/application/logs/*
+ 
+# Codekit's Personal Set & Sass Cache.
+config.codekit
+.codekit-cache
+.sass-cache
+ 
+# Intellij Project Files
+.idea
+*.iml
+out
+gen
+ 
+# Written by Kim Hun (kaymix@gra-fik.com)
