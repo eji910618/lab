@@ -24,6 +24,7 @@
             left: 0;
             z-index: 99999;
             width: 100%;
+            -webkit-user-drag: none;
         }
         #zoom-view img {
             width: 100%;
@@ -34,40 +35,46 @@
     <script>window.jQuery || document.write('<script src="/js/jquery-1.11.1.min.js"><\/script>')</script>
     <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <script src="/hammer/js/hammer.js"></script>
+<!--    <script src="/hammer/js/hammer.js"></script>-->
     <script src="/slick/js/min/slick.min.js"></script>
+    <script src="/js/min/RTP.PinchZoom.min.js"></script>
 </head>
 <body>
-<!--<div id="test-innerZoom">
-        <img id="rect1" src="/image/Shiba-001.jpg">
-        <img id="rect2" src="/image/Shiba-002.jpg">
-        <img id="rect3" src="/image/Shiba-003.jpg">
-        <img id="rect4" src="/image/Shiba-004.jpg">
-</div>-->
 <div id="test">
-    <div id="zoom-view"></div>
+<!--    <div id="zoom-view" class="pinch-zoom"></div>-->
     <div id="test-innerZoom">
-        <div id="rect1" class="thumnail-item">
-            <img class="img-responsive" src="/image/Shiba-001.jpg">
+        <div class="thumnail-item">
+            <div class="pinch-zoom">
+                <img class="img-responsive" src="/image/Shiba-001.jpg">
+            </div>
         </div>
         <div class="thumnail-item">
-            <img id="rect2" class="img-responsive" src="/image/Shiba-002.jpg">
+            <div class="pinch-zoom">
+                <img class="img-responsive" src="/image/Shiba-002.jpg">
+            </div>
         </div>
         <div class="thumnail-item">
-            <img id="rect3" class="img-responsive" src="/image/Shiba-003.jpg">
+            <div class="pinch-zoom">
+                <img class="img-responsive" src="/image/Shiba-003.jpg">
+            </div>
         </div>
         <div class="thumnail-item">
-            <img id="rect4" class="img-responsive" src="/image/Shiba-004.jpg">
+            <div class="pinch-zoom">
+                <img class="img-responsive" src="/image/Shiba-004.jpg">
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+       $('div.pinch-zoom').each(function(){
+           new RTP.PinchZoom($(this), {});
+       });
     $('#test-innerZoom').slick({
         adaptiveHeight: true,
         pauseOnDotsHover: true
     });
-    function hammerIt(elm) {
+    /*function hammerIt(elm) {
         hammertime = new Hammer(elm, {
             touchAction: 'pan-x'
         });
@@ -128,8 +135,8 @@
                 el.style.webkitTransform = transform;
             }
         });
-    }
-    (function($) {
+    }*/
+    /*(function($) {
         $.fn.doubleTap = function(doubleTapCallback) {
             return this.each(function(){
                 var elm = this;
@@ -154,13 +161,16 @@
             var imgSrc = $(this).attr('src');
 
             targetImg.append('<img src="' + imgSrc + '">');
-            hammerIt(document.getElementById("zoom-view").children[0]);
+            /!*$('div.pinch-zoom').each(function(){
+                new RTP.PinchZoom($(this), {});
+            });*!/
+//            hammerIt(document.getElementById("zoom-view").children[0]);
         });
     }
     doubletapZoom($('#test-innerZoom img'));
     $('#zoom-view').doubleTap(function () {
        $(this).children().remove();
-    });
+    });*/
 
 </script>
 </body>
