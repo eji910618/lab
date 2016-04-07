@@ -67,13 +67,12 @@
 </div>
 
 <script>
+    $('#test-innerZoom').slick({
+        pauseOnDotsHover: true
+    });
        $('div.pinch-zoom').each(function(){
            new RTP.PinchZoom($(this), {});
        });
-    $('#test-innerZoom').slick({
-        adaptiveHeight: true,
-        pauseOnDotsHover: true
-    });
     /*function hammerIt(elm) {
         hammertime = new Hammer(elm, {
             touchAction: 'pan-x'
