@@ -35,7 +35,7 @@
 <body>
 
     <div class="container">
-        <p>Hammer provides a <a href="/zoomzoom/js/touchaction.js">kind of polyfill</a>
+        <p>Hammer provides a <a href="../../src/touchaction.js">kind of polyfill</a>
             for the browsers that don't support the <a href="http://www.w3.org/TR/pointerevents/#the-touch-action-css-property">touch-action</a> property.</p>
 
         <div id="native" class="green">Your browser has support for the touch-action property!</div>
@@ -62,7 +62,7 @@
         <p>Should prevent all.</p>
         <div class="tester azure" id="none"></div>
     </div>
-    <script src="/hammer/js/hammer.js"></script>
+    <script src="../../hammer.js"></script>
     <script>
         var support = Hammer.prefixed(document.body.style, 'touchAction');
         document.getElementById(support ? 'native' : 'no-native').className += ' show';

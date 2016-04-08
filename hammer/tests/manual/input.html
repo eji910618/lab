@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta name="msapplication-tap-highlight" content="no"/>
     <link rel="stylesheet" href="assets/style.css">
     <title>Hammer.js</title>
 </head>
 <body>
     <div class="container">
-
-        <div id="hit" class="bg1" style="padding: 30px;">
-            <span id="target" class="bg5" style="display: block; height: 100px;"></span>
+        <div id="hit" class="bg1" style="padding: 30px; height: 200px;">
         </div>
 
         <pre id="debug" style="overflow:hidden; background: #eee; padding: 15px;"></pre>
 
         <pre id="log" style="overflow:hidden;"></pre>
-
     </div>
-   <script src="/hammer/js/hammer.js"></script>
+    <script src="../../hammer.js"></script>
     <script>
 
         Object.prototype.toDirString = function() {
@@ -37,24 +35,16 @@
             return output.join("\n")
         };
 
-
         var el = document.querySelector("#hit");
         var log = document.querySelector("#log");
         var debug = document.querySelector("#debug");
 
         var mc = new Hammer(el);
         mc.get('pinch').set({ enable: true });
-        mc.get('rotate').set({ enable: true });
-        mc.on("swipe pan panstart panmove panend pancancel multipan press pressup pinch rotate tap doubletap",
-                logGesture);
 
-        function DEBUG(str) {
-            debug.textContent = str;
-        }
-        function logGesture(ev) {
-            console.log(ev.timeStamp, ev.type, ev);
-            log.textContent = ev.toDirString();
-        }
+        mc.on("hammer.input", function(ev) {
+            debug.innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFinal, ev.deltaX, ev.deltaY].join("<br>");
+        });
 
     </script>
 </body>
