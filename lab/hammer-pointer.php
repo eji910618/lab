@@ -45,18 +45,16 @@
             height: 30px;
             background-color: #fff;
         }
-        .addPointer {
-            border: 1px solid green;
+        .addPointer,
+        .removePointer {
+            border: 2px solid #000;
             background-color: #fff;
             font-size: 20px;
             margin-bottom: 20px;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            border-radius: 10px;
             padding: 0 10px;
             cursor: pointer;
         }
-        .addPointer:focus {
+        button:focus {
             outline: none;
         }
     </style>
@@ -65,7 +63,8 @@
 
 <div class="container">
 
-    <button class="addPointer" id="addBtn">addPointer</button>
+    <button class="addPointer">addPointer</button>
+    <button class="removePointer">removePointer</button>
 
     <div class="hit">
         <span class="pointer"></span>
@@ -91,16 +90,19 @@
                 coordinates: '.pos',
                 area: '.hit',
                 addButton: 'button.addPointer',
+                removeButton: 'button.removePointer',
                 addPointer: '<span class="pointer"></span>',
-                addLogBox: '<p class="pos"></p>',
-                logBoxLocation: '.container'
+                addPos: '<p class="pos"></p>'
             };
 
             _.initials = {
-                currentPos: null,
                 offsetX: 0,
                 offsetY: 0,
-                ticking: false
+                ticking: false,
+                $pointerWrap: null,
+                $posWrap: null,
+                $pointers: null,
+                $pointerLen: null
             };
 
             $.extend(_, _.initials);
@@ -127,14 +129,22 @@
                 };
         })();
 
+        var forEach = function (array, callback, scope) {
+            for (var i = 0; i < array.length; i++) {
+                callback.call(scope, i, array[i]);
+            }
+        };
 
         asdasd.prototype = {
 
             init: function() {
                 var _ = this;
 
-                _.addPointer();
                 _.hammerInit(_.element);
+                _.buildLayout();
+                _.addPointer();
+                _.removePointer();
+                _.setPointer();
             },
             getTranslateX: function(obj) {
                 if(!window.getComputedStyle) return;
@@ -155,11 +165,6 @@
                 var transform = {
                     translate: {x: 0, y: 0}
                 };
-                var forEach = function (array, callback, scope) {
-                    for (var i = 0; i < array.length; i++) {
-                        callback.call(scope, i, array[i]);
-                    }
-                };
                 var els = document.querySelectorAll('.' + el.className),
                     eachPos = document.querySelectorAll(_.options.coordinates),
                     areaWidth = document.querySelector(_.options.area).clientWidth,
@@ -169,6 +174,7 @@
                     mc.add(new Hammer.Pan({threshold: 0, pointers: 0}));
                     mc.add(new Hammer.Swipe()).recognizeWith(mc.get('pan'));
 
+                    mc.on("panstart", onPanStart);
                     mc.on("panmove", onPan);
                     mc.on("panend", onPanEnd);
                     mc.on("swipe", onSwipe);
@@ -192,7 +198,23 @@
                             _.ticking = true;
                         }
                     }
+                    function onPanStart() {
+                        _.offsetX = _.getTranslateX(els[i]);
+                        _.offsetY = _.getTranslateY(els[i]);
+                    }
+                    function onPan(ev) {
+                        if (_.offsetX < 0 || _.offsetY < 0 || areaWidth < _.offsetX || areaHeight < _.offsetY) {
+                            _.offsetX = 0;
+                            _.offsetY = 0;
+                        }
+                        transform.translate = {
+                            x: _.offsetX + ev.deltaX,
+                            y: _.offsetY + ev.deltaY
+                        };
+                        requestElementUpdate();
+                    }
                     function onPanEnd(ev) {
+//                        console.log(_.getTranslateX(els[i]), _.getTranslateY(els[i]));
                         transform.translate = {
                             x: _.offsetX,
                             y: _.offsetY
@@ -208,35 +230,46 @@
                             updateElementTransform();
                         }
                     }
-                    function onPan(ev) {
-                        if (_.offsetX < 0 || _.offsetY < 0 || areaWidth < _.offsetX || areaHeight < _.offsetY) {
-                            _.offsetX = 0;
-                            _.offsetY = 0;
-                        }
-                        transform.translate = {
-                            x: ev.deltaX + _.offsetX,
-                            y: ev.deltaY + _.offsetY
-                        };
-                        requestElementUpdate();
-                    }
-
                     function onSwipe(ev) {
                         transform.ry = (ev.direction & Hammer.DIRECTION_HORIZONTAL) ? 1 : 0;
                         transform.rx = (ev.direction & Hammer.DIRECTION_VERTICAL) ? 1 : 0;
-
                         requestElementUpdate();
                     }
                     console.log('hammerInit!!!');
                 });
             },
-            addPointer: function() {
+            buildLayout: function() {
                 var _ = this;
 
+                _.$pointerWrap = $(_.element).wrap('<div class="pointer-wrap"/>').parent();
+                _.$posWrap = $(_.options.coordinates).wrap('<div class="pos-wrap"/>').parent();
+            },
+            setPointer: function() {
+                var _ = this;
+                _.$pointers = _.$pointerWrap.children();
+                _.$pointerLen = _.$pointerWrap.children().length;
+                _.$pointers.each(function(index) {
+                    $(this).attr('data-asdasd-index', index)
+                        .css({
+                            zIndex: _.$pointerLen-index
+                        });
+                });
+            },
+            addPointer: function() {
+                var _ = this;
                 $(_.options.addButton).on('click', function(){
-                   $(_.options.addPointer).appendTo(_.options.area)
+                   $(_.options.addPointer).appendTo('.pointer-wrap')
                         .css({'background-color' : getRandomColor()});
-                    $(_.options.addLogBox).appendTo(_.options.logBoxLocation);
+                    $(_.options.addPos).appendTo('.pos-wrap');
                     _.hammerInit(_.element);
+                    _.setPointer();
+                });
+            },
+            removePointer: function() {
+                var _ = this;
+                $(_.options.removeButton).on('click', function(){
+                    _.$pointerWrap.children().last().remove();
+                    _.$posWrap.children().last().remove();
                 });
             }
         };
