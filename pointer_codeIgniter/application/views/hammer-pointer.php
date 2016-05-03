@@ -26,7 +26,6 @@
             overflow: hidden;
         }
         .hit .pointer {
-            display: block;
             cursor: pointer;
             width: 20px;
             height: 20px;
@@ -38,10 +37,27 @@
             left: 0;
             background-color: red;
         }
+        .pointer .input-pointer-info {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 100px;
+            background-color: #fff;
+            border: 2px solid #999;
+            padding: 10px;
+            cursor: auto;
+        }
+        .pointer .input-pointer-info input {
+            width: 100%;
+        }
+        .pointer .input-pointer-info.active {
+            display: block;
+        }
         .pos {
             margin-top: 20px;
             border: 2px solid #000;
-            width: 20%;
+            width: 100%;
             height: 30px;
             background-color: #fff;
         }
@@ -67,11 +83,13 @@
     <button class="removePointer">removePointer</button>
 
     <div class="hit">
-        <span class="pointer"></span>
+        <div class="pointer"></div>
     </div>
 
     <p class="pos"></p>
+<div class="result">
 
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -91,7 +109,8 @@
                 area: '.hit',
                 addButton: 'button.addPointer',
                 removeButton: 'button.removePointer',
-                addPointer: '<span class="pointer"></span>',
+                layerClass: 'input-pointer-info',
+                addPointer: '<div class="pointer"></div>',
                 addPos: '<p class="pos"></p>'
             };
 
@@ -102,13 +121,16 @@
                 $pointerWrap: null,
                 $posWrap: null,
                 $pointers: null,
-                $pointerLen: null
+                $pos: null,
+                $pointerLen: null,
+                $posLen: null,
+                $layerClass: null
             };
 
             $.extend(_, _.initials);
 
             _.element = element;
-            _.options = $.extend( {}, _.defaults, options) ;
+            _.options = $.extend( {}, _.defaults, options);
             _._name = pluginName;
 
             _.init();
@@ -144,7 +166,11 @@
                 _.buildLayout();
                 _.addPointer();
                 _.removePointer();
+                _.indexPointer();
                 _.setPointer();
+                _.buildInputLayer();
+                _.closeInputLayer();
+                _.asd();
             },
             getTranslateX: function(obj) {
                 if(!window.getComputedStyle) return;
@@ -173,11 +199,14 @@
                     var mc = new Hammer.Manager(els[i]);
                     mc.add(new Hammer.Pan({threshold: 0, pointers: 0}));
                     mc.add(new Hammer.Swipe()).recognizeWith(mc.get('pan'));
+                    mc.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
 
                     mc.on("panstart", onPanStart);
                     mc.on("panmove", onPan);
                     mc.on("panend", onPanEnd);
                     mc.on("swipe", onSwipe);
+                    mc.on("doubletap", onDoubleTap);
+
                     mc.on("hammer.input", function (ev) {
                         if (ev.isFinal) {
                             eachPos[i].textContent = [transform.translate.x, transform.translate.y].join(" ");
@@ -235,6 +264,10 @@
                         transform.rx = (ev.direction & Hammer.DIRECTION_VERTICAL) ? 1 : 0;
                         requestElementUpdate();
                     }
+                    function onDoubleTap() {
+                        els[i].children[0].className = '';
+                        els[i].children[0].className += _.options.layerClass + ' active';
+                    }
                     console.log('hammerInit!!!');
                 });
             },
@@ -244,25 +277,59 @@
                 _.$pointerWrap = $(_.element).wrap('<div class="pointer-wrap"/>').parent();
                 _.$posWrap = $(_.options.coordinates).wrap('<div class="pos-wrap"/>').parent();
             },
-            setPointer: function() {
+            buildInputLayer: function() {
+                var _ = this, buildString;
+
+                buildString = '<div class="'+ _.options.layerClass +'">';
+                buildString += '<div class="item input-title"><div class="label"><strong>Title</strong></div><div class="form"><input type="text" name="asdasd-input-title" /></div></div>';
+                buildString += '<div class="item input-img"><div class="label"><strong>Img</strong></div><div class="form"><input type="text" name="asdasd-input-img" /><input type="file" /></div></div>';
+                buildString += '<div class="item submit"><div class="button"><button type="submit" class="submit">SUBMIT</button><span class="button-close">CLOSE</span></div></div>';
+                buildString += '</div>';
+
+                _.$pointers.each(function() {
+                    $(buildString).appendTo($(this));
+                });
+            },
+            closeInputLayer: function() {
+                var _ = this;
+
+                _.$layerClass = '.' + _.options.layerClass;
+                _.$pointers.each(function() {
+                    $(this).find('.button-close').on('click', function() {
+                       $(this).parents(_.$layerClass).removeClass('active');
+                    });
+                });
+            },
+            indexPointer: function() {
                 var _ = this;
                 _.$pointers = _.$pointerWrap.children();
                 _.$pointerLen = _.$pointerWrap.children().length;
-                _.$pointers.each(function(index) {
-                    $(this).attr('data-asdasd-index', index)
+                _.$pointers.each(function(i) {
+                    $(this).attr('data-asdasd-index', i)
                         .css({
-                            zIndex: _.$pointerLen-index
+                            zIndex: _.$pointerLen-i
                         });
                 });
+                _.$pos = _.$posWrap.children();
+                _.$posLen = _.$posWrap.children().length;
+                _.$pos.each(function(i) {
+                    $(this).attr('data-asdasd-index', i);
+                });
+            },
+            setPointer: function() {
+                var _ = this;
             },
             addPointer: function() {
                 var _ = this;
                 $(_.options.addButton).on('click', function(){
-                   $(_.options.addPointer).appendTo('.pointer-wrap')
+                   $(_.options.addPointer).appendTo(_.$pointerWrap)
                         .css({'background-color' : getRandomColor()});
-                    $(_.options.addPos).appendTo('.pos-wrap');
+                    $(_.options.addPos).appendTo(_.$posWrap);
                     _.hammerInit(_.element);
-                    _.setPointer();
+                    _.indexPointer();
+                    _.buildInputLayer();
+                    _.closeInputLayer();
+                    _.asd();
                 });
             },
             removePointer: function() {
@@ -270,6 +337,33 @@
                 $(_.options.removeButton).on('click', function(){
                     _.$pointerWrap.children().last().remove();
                     _.$posWrap.children().last().remove();
+                });
+            },
+            asd: function() {
+                var _ = this;
+                _.$pointers.each(function(i) {
+                    $(this).find('button.submit').click( function() {
+                        var pointerInfo = $(this).parents(_.$layerClass);
+                        _.$pos.data('asdasd-index', i).append('<span></span>');
+//                        $('.container .result').html('');
+                        $.ajax({
+                            url: './ajax.php',
+                            dataType: 'json',
+                            type: 'POST',
+                            data: {
+                                'title': pointerInfo.find('input[name="asdasd-input-title"]').val(),
+                                'img': pointerInfo.find('input[name="asdasd-input-img"]').val()
+                            },
+                            success: function(result){
+                                if(result['result']==true){
+                                    console.log(result);
+                                    _.$pos.data('asdasd-index', i).append('<span>' + result["title"] + '</span>');
+//                                    $('.container .result').html(result);
+                                }
+                            }
+                        });
+                        pointerInfo.removeClass('active');
+                    });
                 });
             }
         };
