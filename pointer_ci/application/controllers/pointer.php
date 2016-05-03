@@ -19,7 +19,7 @@ class Pointer extends CI_Controller {
      */
     public function index()
     {
-        $this->load->view('hammer-pointer');
+        $this->load->view('pointer');
     }
 }
 
