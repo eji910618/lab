@@ -19,7 +19,7 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('hammer-pointer');
+		$this->load->view('welcome_message');
 	}
 }
 
