@@ -114,6 +114,7 @@
     });
     wideScroll.on('scrollStart', function() {
         wideScrollDirection = this.directionX;
+        console.log(this.distX);
 //        console.log(wideScrollDirection);
     });
     wideScroll.on('scrollEnd', function() {
@@ -125,6 +126,13 @@
             myScroll.enable();
             wideScroll.disable();
         }
+    });
+    wideScroll.on('scroll', function() {
+        if ( this.distX > 0 && wideScroll.x == 0 ) {
+            myScroll.enable();
+            wideScroll.disable();
+        }
+//       console.log(this.distX);
     });
     /*if ( wideScroll.x == wideScroll.maxScrollX ) {
     $('.billboard-wide').on('swipeleft', function(){
@@ -143,10 +151,12 @@
         if ( scrollDirection == 1 && $('.billboard .billboard-item.active').hasClass('wide') ) {
             myScroll.disable();
             wideScroll.enable();
+            wideScrollDirection = -1;
         }
         if ( scrollDirection == -1 && $('.billboard .billboard-item.active').hasClass('wide') ) {
             myScroll.disable();
             wideScroll.enable();
+            wideScrollDirection = 1;
         }
     });
     function addActiveClass(contentsScroll, target) {
