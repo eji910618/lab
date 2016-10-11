@@ -1,0 +1,37 @@
+body {
+    color: #222;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.eomlider-item {
+    .eomlider-content {
+        text-align: center;
+        top: 40px;
+    }
+}
+#eomlider-item-1 {
+    .eomlider-content {
+        color: #fff;
+    }
+    .eomlider-image {
+        background-image: url('../img/apple-002.jpg');
+    }
+}
+#eomlider-item-2 {
+    .eomlider-image {
+        background-image: url('../img/apple-003.jpg');
+    }
+}
+#eomlider-item-3 {
+    .eomlider-image {
+        background-image: url('../img/apple-001.jpg');
+    }
+}
+#eomlider-item-4 {
+    .eomlider-content {
+        color: #fff;
+    }
+    .eomlider-image {
+        background-image: url('../img/apple-004.jpg');
+    }
+}

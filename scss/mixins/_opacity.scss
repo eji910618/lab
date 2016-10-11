@@ -1,0 +1,7 @@
+@mixin opacity($opacity) {
+  filter: alpha(opacity = $opacity*100); // IE6,7
+  -ms-filter: alpha(opacity=$opacity*100); // IE8
+  -moz-opacity: $opacity; // Firefox 1.5
+  -khtml-opacity: $opacity; // Safari 1.x
+  opacity: $opacity;
+}
